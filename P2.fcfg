@@ -1,0 +1,23 @@
+S -> Statement | WStatement | WQuestion
+Statement -> NP VP
+WStatement -> WRB NP VP
+WQuestion -> WRB VP NP
+
+NP -> ProperNoun | Det Nominal | Nominal | Adj NP | NP PP | NP Conj NP
+Nominal -> Nominal Noun | Noun
+
+VP -> VP ARG | V | Adv VP | VP Conj VP
+PP -> Prep NP
+ARG -> NP | VP | PP| Adj | S
+
+
+ProperNoun -> 'Wallace' |  'Gromit'
+V -> 'feeds'| 'feed' | 'fed' | 'barks' | 'barked' | 'eat' | 'ate' | 'eats' | 'thinks' | 'drinks' | 'puts' | 'does' | 'bark'
+
+Prep -> 'in' | 'after' | 'when'
+Det -> 'the'
+Adv -> 'seldom' | 'often'
+Noun -> 'cheese' | 'water' | 'kitchen' | 'dinner'
+Conj -> 'and' | 'when'
+Adj -> 'tasty' | 'soft'
+WRB -> 'when'
