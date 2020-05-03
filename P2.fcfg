@@ -1,23 +1,59 @@
-S -> Statement | WStatement | WQuestion
-Statement -> NP VP
-WStatement -> WRB NP VP
-WQuestion -> WRB VP NP
+S -> Sentence | WSentence | WQuestion
+Sentence -> NP[NUM=?n,PER=?p] VP[NUM=?n,PER=?p,FORM=?f,SUBCAT=nil]
+WSentence -> WAdv Sentence Sentence
+## the verb must be in the plural form
+WQuestion -> WAdv AuxV[NUM=?n,PER=?p] NP[NUM=?n,PER=?p] VP[NUM=pl,SUBCAT=nil]
 
-NP -> ProperNoun | Det Nominal | Nominal | Adj NP | NP PP | NP Conj NP
+NP[NUM=?n,PER=?p] -> ProperNoun[NUM=?n,PER=?p]
+
+NP -> Det Nominal | Nominal | Adj NP | NP PP | NP Conj NP
 Nominal -> Nominal Noun | Noun
 
-VP -> VP ARG | V | Adv VP | VP Conj VP
+
+VP[NUM=?n,PER=?p,FORM=?f,SUBCAT=?args] -> V[NUM=?n,PER=?p,FORM=?f,SUBCAT=?args]
+VP[NUM=?n,PER=?p,FORM=?f,SUBCAT=?rest] -> VP[NUM=?n,PER=?p,FORM=?f,SUBCAT=nil] Conj VP[NUM=?n,PER=?p,FORM=?f,SUBCAT=nil]
+VP[NUM=?n,PER=?p,FORM=?f,SUBCAT=nil] -> Adv VP[NUM=?n,PER=?p,FORM=?f,SUBCAT=?args]
+VP[NUM=?n,PER=?p,FORM=?f,SUBCAT=?rest] -> VP[NUM=?n,PER=?p,FORM=?f,SUBCAT=[HEAD=?c,  TAIL=?rest]] ARG[CAT=?c]
+
+ARG[CAT=np] -> NP
+ARG[CAT=vp] -> VP
+ARG[CAT=pp] -> PP
+ARG[CAT=adj] -> Adj
+ARG[CAT=s] -> Sentence
+
 PP -> Prep NP
-ARG -> NP | VP | PP| Adj | S
+ProperNoun[NUM=sg,PER=3] -> 'Wallace' |  'Gromit'
 
+V[FORM=pres,NUM=sg,PER=3,SUBCAT=nil] -> 'barks'
+V[FORM=pres,NUM=pl,SUBCAT=nil] ->  'bark'
 
-ProperNoun -> 'Wallace' |  'Gromit'
-V -> 'feeds'| 'feed' | 'fed' | 'barks' | 'barked' | 'eat' | 'ate' | 'eats' | 'thinks' | 'drinks' | 'puts' | 'does' | 'bark'
+##ate can be both transitive and intransitive (they ate (a chocolate))
+V[FORM=past,SUBCAT=nil] -> 'barked' | 'ate'
+
+V[FROM=pres,NUM=sg,PER=3,SUBCAT=[HEAD=s,TAIL=nil]] -> 'thinks'
+V[FORM=pres,NUM=sg,PER=3,SUBCAT=[HEAD=np,TAIL=nil]] -> 'feeds' | 'eats' | 'drinks'
+#because we can have feed NP NP (feed gromit(np) cheese and bread(np -> np conj np)
+V[FORM=pres,NUM=sg,PER=3,SUBCAT=[HEAD=np, TAIL=[HEAD=np, TAIL=nil]]] -> 'feeds'
+
+#puts (np)the dish (pp) in the sink
+V[FROM=pres,NUM=sg,PER=3,SUBCAT=[HEAD=np,TAIL=[HEAD=pp,TAIL=nil]]] -> 'puts'
+
+ #NP HEAD BECAUSE -> THEY FEED/EAT __
+V[FROM=pres,NUM=pl,SUBCAT=[HEAD=np,TAIL=nil]] -> 'feed' | 'eat'
+V[FORM=pres,NUM=pl,SUBCAT=[HEAD=np, TAIL=[HEAD=np, TAIL=nil]]] -> 'feed'
+
+######### PAST #########
+V[FORM=past,SUBCAT=[HEAD=np,TAIL=nil]] -> 'fed' | 'ate'
+V[FORM=past,SUBCAT=[HEAD=np,TAIL=[HEAD=np, TAIL=nil]]] -> 'feed'
+
+##FOR LATER
+AuxV[FORM=pres,NUM=sg,PER=3] -> 'does'
+
 
 Prep -> 'in' | 'after' | 'when'
 Det -> 'the'
 Adv -> 'seldom' | 'often'
-Noun -> 'cheese' | 'water' | 'kitchen' | 'dinner'
+Noun -> 'cheese' | 'water' | 'kitchen' | 'dinner' | 'bread'
 Conj -> 'and' | 'when'
 Adj -> 'tasty' | 'soft'
-WRB -> 'when'
+WAdv -> 'when'
