@@ -1,14 +1,18 @@
 S -> Sentence | WSentence | WQuestion
 Sentence -> NP[PER=?p,NUM=?n] VP[PER=?p,NUM=?n,FORM=?f,SUBCAT=nil]
 WSentence -> WAdv Sentence Sentence
+
 ## the verb must be in the plural form
 WQuestion -> WAdv AuxV[PER=?p,NUM=?n] NP[PER=?p,NUM=?n] VP[NUM=pl,SUBCAT=nil] | WhPron AuxV[PER=?p,NUM=?n] NP[PER=?p,NUM=?n] VP[NUM=pl,SUBCAT=nil]
 WQuestion -> PosWh AuxV[PER=?p,NUM=?n] NP[PER=?p,NUM=?n] VP[NUM=pl,SUBCAT=nil]
 
 NP[PER=?p,NUM=?n] -> ProperNoun[PER=?p,NUM=?n]
 
-NP -> Det Nominal | Nominal | ADJ | Det ADJ | NP PP | NP Conj NP
-Nominal -> Nominal Noun | Noun
+NP -> ADJ | Det ADJ | NP Conj NP
+NP[PER=?p,NUM=?n] -> NP[PER=?p,NUM=?n] PP
+NP[PER=?p,NUM=?n] -> Det[NUM=?n] Nominal[PER=?p,NUM=?n]
+Nominal[PER=?p,NUM=?n] -> Nominal[PER=?p,NUM=?n] Noun[PER=?p,NUM=?n] | Noun[PER=?p,NUM=?n]
+NP[PER=?p,NUM=?n] -> Nominal[PER=?p,NUM=?n]
 
 ADJ -> Adj NP
 
@@ -19,10 +23,10 @@ VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=?rest] -> VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=[HEAD=
 VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args] -> GerundSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]
 VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args] -> ModalSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]
 
-GerundSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args] -> V[FORM=gerundgsent,PER=?p,NUM=?n,SUBCAT=?args]  VBG[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args] NP
-ModalSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]  -> Modal V[FORM=?f,NUM=pl,SUBCAT=?args] NP
-ModalSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]  -> Modal VH[FROM=modal,NUM=pl] VPASTPART NP
-ModalSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]  -> Modal NEG VH[FROM=modal,NUM=pl] VPASTPART NP
+GerundSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args] -> V[FORM=gerundgsent,PER=?p,NUM=?n,SUBCAT=?args]  VBG[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]
+ModalSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]  -> Modal V[FORM=?f,NUM=pl,SUBCAT=?args] ARG[CAT=np]
+ModalSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]  -> Modal VH[FROM=modal,NUM=pl] VPASTPART ARG[CAT=np]
+ModalSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]  -> Modal NEG VH[FROM=modal,NUM=pl] VPASTPART ARG[CAT=np]
 
 ARG[CAT=np] -> NP
 ARG[CAT=vp] -> VP
@@ -56,22 +60,26 @@ V[FROM=pres,NUM=pl,SUBCAT=[HEAD=s,TAIL=nil]] -> 'think'
 V[FROM=pres,NUM=pl,SUBCAT=nil] -> 'think'
 V[FROM=pres,NUM=pl,SUBCAT=nil] -> 'eat'
 
-V[FROM=gerundgsent,PER=3,NUM=sg] -> 'likes'
+V[FROM=pres,PER=3,NUM=sg,SUBCAT=[HEAD=np]] -> 'likes'
+V[FROM=gerundgsent,PER=3,NUM=sg,SUBCAT=[HEAD=vbg,TAIL=nil]] -> 'likes'
 VH[FROM=modal,NUM=pl] -> 'have'
 V ->  'think'
-VBG -> 'eating' | 'feeding'
+VBG[CAT=vbg] -> 'eating' | 'feeding'
 VPASTPART -> 'eaten' | 'seen'
 ##FOR LATER
 AuxV[FORM=pres,NUM=sg,PER=3] -> 'does'
 
 
 Prep -> 'in' | 'after' | 'when'
-Det -> 'the'
+Det -> 'the' |'my'
+Det[NUM=sg] -> 'that' | 'a'
+Det[NUM=pl] -> 'these' | 'those'
 Adv -> 'seldom' | 'often'
-Noun -> 'cheese' | 'water' | 'kitchen' | 'dinner' | 'bread'
+Noun[NUM=sg,PER=3] -> 'cheese' | 'water' | 'kitchen' | 'dinner' | 'bread' | 'dog'
+Noun[NUM=pl] -> 'dogs' |'sandwiches'
 Conj -> 'and' | 'when'
 Adj -> 'tasty' | 'soft'
-WAdv -> 'when'
+WAdv -> 'when' | 'where'
 WhPron -> 'what'
 PosWh -> 'whom'
 Modal -> 'may'
