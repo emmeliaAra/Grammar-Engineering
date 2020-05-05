@@ -3,18 +3,27 @@ Sentence -> NP[PER=?p,NUM=?n] VP[PER=?p,NUM=?n,FORM=?f,SUBCAT=nil]
 WSentence -> WAdv Sentence Sentence
 
 ## the verb must be in the plural form
-WQuestion -> WAdv AuxV[PER=?p,NUM=?n] NP[PER=?p,NUM=?n] VP[NUM=pl,SUBCAT=nil] | WhPron AuxV[PER=?p,NUM=?n] NP[PER=?p,NUM=?n] VP[NUM=pl,SUBCAT=nil]
-WQuestion -> PosWh AuxV[PER=?p,NUM=?n] NP[PER=?p,NUM=?n] VP[NUM=pl,SUBCAT=nil]
+WQuestion -> WAdv AuxV[PER=?p,NUM=?n,FORM=?f] NP[PER=?p,NUM=?n] VP[NUM=pl,FORM=pres,SUBCAT=nil]
+WQuestion -> WhPron AuxV[PER=?p,NUM=?n,FORM=?f] NP[PER=?p,NUM=?n] VP[NUM=pl,FORM=pres,SUBCAT=nil]
+WQuestion -> PosWh AuxV[PER=?p,NUM=?n,FORM=?f] NP[PER=?p,NUM=?n] VP[NUM=pl,FORM=pres,SUBCAT=nil]
 
+
+NP -> ADJ | NP Conj NP
 NP[PER=?p,NUM=?n] -> ProperNoun[PER=?p,NUM=?n]
-
-NP -> ADJ | Det ADJ | NP Conj NP
-NP[PER=?p,NUM=?n] -> NP[PER=?p,NUM=?n] PP
+NP[NUM=?n] -> Det[NUM=?n] ADJ
 NP[PER=?p,NUM=?n] -> Det[NUM=?n] Nominal[PER=?p,NUM=?n]
 Nominal[PER=?p,NUM=?n] -> Nominal[PER=?p,NUM=?n] Noun[PER=?p,NUM=?n] | Noun[PER=?p,NUM=?n]
 NP[PER=?p,NUM=?n] -> Nominal[PER=?p,NUM=?n]
+NP[PER=?p,NUM=?n] -> NP[PER=?p,NUM=?n] PP
 
 ADJ -> Adj NP
+PP -> Prep NP
+
+ARG[CAT=np] -> NP
+ARG[CAT=vp] -> VP
+ARG[CAT=pp] -> PP
+ARG[CAT=adj] -> Adj
+ARG[CAT=s] -> Sentence
 
 VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args] -> V[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]
 VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=?rest] -> VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=nil] Conj VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=nil]
@@ -23,60 +32,57 @@ VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=?rest] -> VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=[HEAD=
 VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args] -> GerundSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]
 VP[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args] -> ModalSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]
 
-GerundSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args] -> V[FORM=gerundgsent,PER=?p,NUM=?n,SUBCAT=?args]  VBG[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]
+GerundSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args] -> V[FORM=gerundgsent,PER=?p,NUM=?n,SUBCAT=?vbg]  VBG[cat=?vbg]
 ModalSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]  -> Modal V[FORM=?f,NUM=pl,SUBCAT=?args] ARG[CAT=np]
 ModalSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]  -> Modal VH[FROM=modal,NUM=pl] VPASTPART ARG[CAT=np]
 ModalSent[FORM=?f,PER=?p,NUM=?n,SUBCAT=?args]  -> Modal NEG VH[FROM=modal,NUM=pl] VPASTPART ARG[CAT=np]
 
-ARG[CAT=np] -> NP
-ARG[CAT=vp] -> VP
-ARG[CAT=pp] -> PP
-ARG[CAT=adj] -> Adj
-ARG[CAT=s] -> Sentence
-
-PP -> Prep NP
-ProperNoun[NUM=sg,PER=3] -> 'Wallace' |  'Gromit'
-
 V[FORM=pres,PER=3,NUM=sg,SUBCAT=nil] -> 'barks'
 V[FORM=pres,NUM=pl,SUBCAT=nil] ->  'bark'
-V[FROM=pres,PER=3,NUM=sg,SUBCAT=[HEAD=s,TAIL=nil]] -> 'thinks'
+V[FORM=pres,PER=3,NUM=sg,SUBCAT=[HEAD=s,TAIL=nil]] -> 'thinks'
 V[FORM=pres,PER=3,NUM=sg,SUBCAT=[HEAD=np,TAIL=nil]] -> 'feeds' | 'eats' | 'drinks'
+
 #because we can have feed NP NP (feed gromit(np) cheese and bread(np -> np conj np)
 V[FORM=pres,PER=3,NUM=sg,SUBCAT=[HEAD=np, TAIL=[HEAD=np, TAIL=nil]]] -> 'feeds'
+
 #puts (np)the dish (pp) in the sink
-V[FROM=pres,PER=3,NUM=sg,SUBCAT=[HEAD=np,TAIL=[HEAD=pp,TAIL=nil]]] -> 'puts'
+V[FORM=pres,PER=3,NUM=sg,SUBCAT=[HEAD=np,TAIL=[HEAD=pp,TAIL=nil]]] -> 'puts'
+
 #NP HEAD BECAUSE -> THEY FEED/EAT __
-V[FROM=pres,NUM=pl,SUBCAT=[HEAD=np,TAIL=nil]] -> 'feed' | 'eat' | 'have'
-V[FROM=pres,NUM=pl,SUBCAT=nil] ->'have'
+V[FORM=pres,NUM=pl,SUBCAT=[HEAD=np,TAIL=nil]] -> 'feed' | 'eat' | 'have'
+
+V[FORM=pres,NUM=pl,SUBCAT=nil] ->'have'
 V[FORM=pres,NUM=pl,SUBCAT=[HEAD=np, TAIL=[HEAD=np, TAIL=nil]]] -> 'feed'
-######### PAST #########
+V[FORM=pres,NUM=pl,SUBCAT=[HEAD=s,TAIL=nil]] -> 'think'
+V[FORM=pres,PER=3,NUM=sg,SUBCAT=[HEAD=np]] -> 'likes'
+
+#TO HANDLE PHRASES SUCH AS -> WHAT DO YOU THINK
+V[FROM=pres,NUM=pl,SUBCAT=nil] -> 'think' | 'eat'
+
 V[FORM=past,SUBCAT=[HEAD=np,TAIL=nil]] -> 'fed' | 'ate'
 V[FORM=past,SUBCAT=[HEAD=np,TAIL=[HEAD=np, TAIL=nil]]] -> 'feed'
+
 ##ate can be both transitive and intransitive (they ate (a chocolate))
 V[FORM=past,SUBCAT=nil] -> 'barked' | 'ate'
 
-V[FROM=pres,NUM=pl,SUBCAT=[HEAD=s,TAIL=nil]] -> 'think'
-#TO HANDLE PHRASES SUCH AS -> WHAT DO YOU THINK
-V[FROM=pres,NUM=pl,SUBCAT=nil] -> 'think'
-V[FROM=pres,NUM=pl,SUBCAT=nil] -> 'eat'
-
-V[FROM=pres,PER=3,NUM=sg,SUBCAT=[HEAD=np]] -> 'likes'
 V[FROM=gerundgsent,PER=3,NUM=sg,SUBCAT=[HEAD=vbg,TAIL=nil]] -> 'likes'
-VH[FROM=modal,NUM=pl] -> 'have'
-V ->  'think'
+
+VH[FORM=modal,NUM=pl] -> 'have'
 VBG[CAT=vbg] -> 'eating' | 'feeding'
 VPASTPART -> 'eaten' | 'seen'
-##FOR LATER
 AuxV[FORM=pres,NUM=sg,PER=3] -> 'does'
+AuxV[FORM=past] -> 'did'
+V ->  'think'
 
+ProperNoun[NUM=sg,PER=3] -> 'Wallace' |  'Gromit'
+Noun[NUM=sg] -> 'cheese' | 'water' | 'kitchen' | 'dinner' | 'bread' | 'dog'
+Noun[NUM=pl] -> 'dogs' |'sandwiches'
 
-Prep -> 'in' | 'after' | 'when'
-Det -> 'the' |'my'
 Det[NUM=sg] -> 'that' | 'a'
 Det[NUM=pl] -> 'these' | 'those'
+Det -> 'the' |'my'
+Prep -> 'in' | 'after' | 'when'
 Adv -> 'seldom' | 'often'
-Noun[NUM=sg,PER=3] -> 'cheese' | 'water' | 'kitchen' | 'dinner' | 'bread' | 'dog'
-Noun[NUM=pl] -> 'dogs' |'sandwiches'
 Conj -> 'and' | 'when'
 Adj -> 'tasty' | 'soft'
 WAdv -> 'when' | 'where'
@@ -84,3 +90,4 @@ WhPron -> 'what'
 PosWh -> 'whom'
 Modal -> 'may'
 NEG -> 'not'
+
